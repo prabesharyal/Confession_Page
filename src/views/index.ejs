@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/style.css">
+  <title>Confess Your Secrets</title>
+  <style>
+    /* Add this style to your existing CSS */
+    #loader {
+      display: none;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Anything unsaid stuffs?</h1>
+      <p>Share your thoughts Anonymously to <a href="https://instagram.com/prabesharyalnp">@prabesharyalnp</a></p>
+    </header>
+    <main>
+      <div class="confess-box">
+        <form action="/confess" method="post" id="confessionForm">
+          <textarea name="content" id="content" placeholder="Write your confession..." required></textarea>
+          <button type="submit" id="confessButton">Confess</button>
+          <div id="loader"></div>
+        </form>
+        <div id="errorContainer" style="display: none; color: red;"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const confessionForm = document.getElementById('confessionForm');
+    const confessButton = document.getElementById('confessButton');
+    const loader = document.getElementById('loader');
+    const errorContainer = document.getElementById('errorContainer');
+
+    confessionForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      try {
+        // Show loader, hide button
+        loader.style.display = 'block';
+        confessButton.style.display = 'none';
+
+        const response = await fetch('/confess', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: document.getElementById('content').value,
+            timestamp: new Date().toISOString(),
+            ipAddress: 'fakeIPAddress', // You may want to handle this server-side
+            userAgent: navigator.userAgent,
+          }),
+        });
+
+        if (response.ok) {
+          // Submission successful, show sweet toast message
+          Swal.fire({
+            icon: 'success',
+            title: 'Confession submitted successfully!',
+            showConfirmButton: false,
+            
+          });
+
+          // Clear the textarea after successful submission
+          document.getElementById('content').value = '';
+        } else {
+          // Submission failed, show sweet toast message with error
+          Swal.fire({
+            icon: 'error',
+            title: 'Error submitting confession. Please try again.',
+            showConfirmButton: false,
+          });
+
+          // Display the error message in the hidden div
+          const errorMessage = await response.text();
+          errorContainer.textContent = errorMessage;
+          errorContainer.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error submitting confession:', error);
+      } finally {
+        // Hide loader, show button after processing
+        loader.style.display = 'none';
+        confessButton.style.display = 'block';
+      }
+    });
+    
+  </script>
+  <script>function autoResizeTextarea(textarea) {
+  textarea.style.height = "auto";
+  textarea.style.height = Math.min(textarea.scrollHeight, 400) + "px"; // Set a maximum height if needed
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const textareas = document.querySelectorAll("textarea");
+  textareas.forEach(textarea => {
+    textarea.addEventListener("input", () => autoResizeTextarea(textarea));
+  });
+});
+</script>
+</body>
+</html>

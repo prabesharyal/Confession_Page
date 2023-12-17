@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&family=Saira+Condensed&display=swap');
+
+body {
+    background-color: #000000;
+    color: #FFF;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.container {
+    width: 600px;
+    max-width: 90%;
+    border-radius: 5px;
+    background-color: #1E1E1E;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #bbadad;;
+    /* Instagram Purple Violet */
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+        color: #ffffffb2;
+            ;
+}
+
+.confess-box {
+    border-radius: 15px;
+    background-color: #212121;
+    padding: 15px;
+}
+
+textarea {
+    width: 100%;
+    height: auto;
+    resize: none;
+    border: none;
+    outline: none;
+    background-color: #2c2c2c;
+    color: #FFF;
+    /* padding: 15px; */
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+    padding: auto;
+    font-family: 'Kanit', sans-serif;
+}
+
+textarea::placeholder {
+    color: #ccc;
+}
+
+a {
+    text-decoration: none;
+    color: #39c9b6;
+}
+
+a:hover {
+    color: #fccc63;
+        transition: color 1s ease-in-out;
+}
+button {
+    position: relative;
+    display: block;
+    width: 50%;
+    margin: auto;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #FFF;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    /* Metallic shine gradient */
+    transition: left 0.5s ease;
+    /* Animation transition */
+}
+
+button:hover::before {
+    left: 100%;
+    /* Move the shine effect from left to right */
+}
+
+#loader {
+    display: none;
+    border: 4px solid #FFF;
+    border-top: 4px solid #8a3ab9;
+    /* Instagram Purple Violet */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#errorContainer {
+    color: #cd486b;
+    /* Instagram Maroon */
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+}
+
+.confession {
+    border-radius: 5px;
+    background-color: #282828;
+    padding: 15px;
+    margin-bottom: 10px;
+    color: #FFF;
+    border: 1px solid #4c68d7;
+    /* Instagram Blue */
+}
+
+.confession p {
+    margin-bottom: 5px;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    float: left;
+}
+
+.icon {
+    font-size: 20px;
+    color: #8a3ab9;
+    /* Instagram Purple Violet */
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        }
+        }
