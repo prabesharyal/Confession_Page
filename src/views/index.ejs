@@ -34,11 +34,28 @@
     </header>
     <main>
       <div class="confess-box">
-        <form action="/confess" method="post" id="confessionForm">
+        <!-- <form action="/confess" method="post" id="confessionForm">
           <textarea name="content" id="content" placeholder="Write your confession..." required></textarea>
           <button type="submit" id="confessButton">Confess</button>
           <div id="loader"></div>
-        </form>
+        </form> -->
+
+            <form action="/confess" method="post">
+      <label for="content">Confession:</label>
+      <textarea name="content" id="content" required></textarea>
+      <input
+        type="hidden"
+        name="timestamp"
+        value="<%= new Date().toISOString() %>"
+      />
+      <input type="hidden" name="ipAddress" value="<%= req.ip %>" />
+      <input
+        type="hidden"
+        name="userAgent"
+        value="<%= req.headers['user-agent'] %>"
+      />
+      <br />
+      <button type="submit">Submit Confession</button>
         <div id="errorContainer" style="display: none; color: red;"></div>
       </div>
     </main>
