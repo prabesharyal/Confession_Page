@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
+const cron = require('cron');
+
 // const moment = require('moment')
 const app = express();
 const port = 3000;
@@ -43,10 +45,10 @@ app.get('/', async (req, res) => {
 
 app.post('/confess', async (req, res) => {
     try {
-        console.log(req.body);
-        console.log('Received confession data:', req.body.content);
-        console.log('Request IP Address:', req.ip);
-        console.log('Request User Agent:', req.headers['user-agent']);
+        // console.log(req.body);
+        // console.log('Received confession data:', req.body.content);
+        // console.log('Request IP Address:', req.ip);
+        // console.log('Request User Agent:', req.headers['user-agent']);
         // Use req.body for JSON data and req.body.content for form data
         const confession = new Confession({
             content: req.body.content,
@@ -81,7 +83,32 @@ app.get('/api/json', async (req, res) => {
     }
 });
 
+// Ping endpoint for self-pinging
+app.get('/ping', (req, res) => {
+    res.status(200).send('Server is running and responsive.');
+});
+
 // Server setup
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
+
+// Set up cron job for self-pinging every 10 minutes
+const pingJob = new cron.CronJob('*/10 * * * *', async () => {
+    try {
+        const response = await fetch('http://localhost:3000/ping', {
+            method: 'GET',
+        });
+
+        if (response.ok) {
+            console.log('Server pinged successfully');
+        } else {
+            console.error('Error pinging server:', response.status, response.statusText);
+        }
+    } catch (error) {
+        console.error('Error pinging server:', error.message);
+    }
+});
+
+pingJob.start();
