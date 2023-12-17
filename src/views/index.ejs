@@ -23,12 +23,6 @@
             name="timestamp"
             value="<%= new Date().toISOString() %>"
           />
-          <input type="hidden" name="ipAddress" id="ipAddress" value="<%= req.ip %>" />
-          <input
-            type="hidden"
-            name="userAgent"
-            value="<%= req.headers['user-agent'] %>"
-          />
           <br />
           <button type="submit" id="confessButton">Confess</button>
           <div id="loader"></div>
@@ -39,79 +33,101 @@
     </main>
   </div>
 
-  <script>
-    const confessionForm = document.getElementById('confessionForm');
-    const confessButton = document.getElementById('confessButton');
-    const loader = document.getElementById('loader');
-    const errorContainer = document.getElementById('errorContainer');
-    const ipAddressInput = document.getElementById('ipAddress');
+<!-- ... (other head elements) -->
 
-    confessionForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
+<script>
+  const confessionForm = document.getElementById('confessionForm');
+  const confessButton = document.getElementById('confessButton');
+  const loader = document.getElementById('loader');
+  const errorContainer = document.getElementById('errorContainer');
 
-      try {
-        // Show loader, hide button
-        loader.style.display = 'block';
-        confessButton.style.display = 'none';
+  confessionForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-        const response = await fetch('/confess', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            content: document.getElementById('content').value,
-            timestamp: new Date().toISOString(),
-            ipAddress: ipAddressInput.value,
-            userAgent: navigator.userAgent,
-          }),
+    try {
+      // Show loader, hide button
+      loader.style.display = 'block';
+      confessButton.style.display = 'none';
+
+      const ipAddress = await getIPFromCloudflare(); // Use await to get the IP address
+      const response = await fetch('/confess', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: document.getElementById('content').value,
+          timestamp: new Date().toISOString(),
+          ipAddress: ipAddress,
+          userAgent: navigator.userAgent,
+        }),
+      });
+
+      if (response.ok) {
+        // Submission successful, show sweet toast message with a close button
+        Swal.fire({
+          icon: 'success',
+          title: 'Confession submitted successfully!',
+          showConfirmButton: false,
+          showCloseButton: true,
         });
 
-        if (response.ok) {
-          // Submission successful, show sweet toast message with a close button
-          Swal.fire({
-            icon: 'success',
-            title: 'Confession submitted successfully!',
-            showConfirmButton: false,
-            showCloseButton: true, // Add this line to show the close button
-          });
+        // Clear the textarea after successful submission
+        document.getElementById('content').value = '';
+      } else {
+        // Submission failed, show sweet toast message with error
+        Swal.fire({
+          icon: 'error',
+          title: 'Error submitting confession. Please try again.',
+          showConfirmButton: false,
+        });
 
-          // Clear the textarea after successful submission
-          document.getElementById('content').value = '';
-        } else {
-          // Submission failed, show sweet toast message with error
-          Swal.fire({
-            icon: 'error',
-            title: 'Error submitting confession. Please try again.',
-            showConfirmButton: false,
-          });
-
-          // Display the error message in the hidden div
-          const errorMessage = await response.text();
-          errorContainer.textContent = errorMessage;
-          errorContainer.style.display = 'block';
-        }
-      } catch (error) {
-        console.error('Error submitting confession:', error);
-      } finally {
-        // Hide loader, show button after processing
-        loader.style.display = 'none';
-        confessButton.style.display = 'block';
+        // Display the error message in the hidden div
+        const errorMessage = await response.text();
+        errorContainer.textContent = errorMessage;
+        errorContainer.style.display = 'block';
       }
-    });
-
-    // Function to auto-resize the textarea
-    function autoResizeTextarea(textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = Math.min(textarea.scrollHeight, 400) + "px"; // Set a maximum height if needed
+    } catch (error) {
+      console.error('Error submitting confession:', error);
+    } finally {
+      // Hide loader, show button after processing
+      loader.style.display = 'none';
+      confessButton.style.display = 'block';
     }
+  });
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const textareas = document.querySelectorAll("textarea");
-      textareas.forEach(textarea => {
-        textarea.addEventListener("input", () => autoResizeTextarea(textarea));
-      });
+  // Function to auto-resize the textarea
+  function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 400) + 'px'; // Set a maximum height if needed
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach((textarea) => {
+      textarea.addEventListener('input', () => autoResizeTextarea(textarea));
     });
-  </script>
+  });
+
+  async function getIPFromCloudflare() {
+    try {
+      const data = await text('https://www.cloudflare.com/cdn-cgi/trace');
+      const ipRegex = /[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/;
+      const ipAddress = data.match(ipRegex)[0];
+      console.log(ipAddress);
+      return ipAddress;
+    } catch (error) {
+      console.error('Error fetching IP address from Cloudflare:', error.message);
+      return 'unknown';
+    }
+  }
+
+  function text(url) {
+    return fetch(url).then(res => res.text());
+  }
+</script>
+
+<!-- ... (closing body and html tags) -->
+
 </body>
 </html>
