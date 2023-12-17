@@ -23,7 +23,7 @@
             name="timestamp"
             value="<%= new Date().toISOString() %>"
           />
-          <input type="hidden" name="ipAddress" id="ipAddress" value="" />
+          <input type="hidden" name="ipAddress" id="ipAddress" value="<%= req.ip %>" />
           <input
             type="hidden"
             name="userAgent"
