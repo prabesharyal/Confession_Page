@@ -14,7 +14,7 @@ body {
 
 .container {
     width: 600px;
-    max-width: 90%;
+    max-width: 80%;
     border-radius: 5px;
     background-color: #1E1E1E;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -112,11 +112,11 @@ button:hover::before {
     /* Move the shine effect from left to right */
 }
 
+
 #loader {
     display: none;
-    border: 4px solid #FFF;
-    border-top: 4px solid #8a3ab9;
-    /* Instagram Purple Violet */
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -133,6 +133,7 @@ button:hover::before {
         transform: rotate(360deg);
     }
 }
+
 
 #errorContainer {
     color: #cd486b;
@@ -172,6 +173,6 @@ button:hover::before {
 
 @media (max-width: 480px) {
     .container {
-        width: 90%;
+        width: 60%;
         }
         }

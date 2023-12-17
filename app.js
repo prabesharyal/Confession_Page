@@ -25,6 +25,8 @@ const Confession = require('./src/models/confession');
 app.use(cors({ origin: ['https://prabesharyal.info.np', 'https://prabesharyal-info.web.app'] }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // Add this line to parse JSON bodies
+
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.set('view engine', 'ejs');
 
@@ -41,10 +43,10 @@ app.get('/', async (req, res) => {
 
 app.post('/confess', async (req, res) => {
     try {
-        // console.log(req.body);
-        // console.log('Received confession data:', req.body.content);
-        // console.log('Request IP Address:', req.ip);
-        // console.log('Request User Agent:', req.headers['user-agent']);
+        console.log(req.body);
+        console.log('Received confession data:', req.body.content);
+        console.log('Request IP Address:', req.ip);
+        console.log('Request User Agent:', req.headers['user-agent']);
         // Use req.body for JSON data and req.body.content for form data
         const confession = new Confession({
             content: req.body.content,
