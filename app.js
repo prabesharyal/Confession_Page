@@ -24,7 +24,7 @@ mongoose.connect(DBURI, {
 const Confession = require('./src/models/confession');
 
 // Middleware
-app.use(cors({ origin: ['https://prabesharyal.info.np', 'https://prabesharyal-info.web.app'] }));
+app.use(cors({ origin: ['https://prabesharyal.info.np', 'https://prabesharyal-info.web.app', 'https://confess.prabesharyal.info.np/'] }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // Add this line to parse JSON bodies
