@@ -44,10 +44,10 @@ app.get('/', async (req, res) => {
 });
 
 // Routes
-app.get('/all_confessions', async (req, res) => {
+app.get('/all', async (req, res) => {
     try {
         const confessions = await Confession.find().sort({ timestamp: -1 });
-        res.render('all_confessions', { confessions, req });
+        res.render('confessed', { confessions, req });
     } catch (error) {
         console.error('Error retrieving confessions:', error);
         res.status(500).send('Internal Server Error');
